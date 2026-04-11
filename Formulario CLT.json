@@ -1,0 +1,227 @@
+{
+  "name": "Formulario CLT",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6422bd3e-0ac9-4b0e-8dcf-5e1acde5776b",
+              "name": "=Email ",
+              "value": "={{ $json['Email '] }}",
+              "type": "string"
+            },
+            {
+              "id": "5b2841af-939b-49dc-9e21-e2d2301af157",
+              "name": "Nome",
+              "value": "={{ $json.Nome }}",
+              "type": "string"
+            },
+            {
+              "id": "1091c62e-c5a2-4f98-bf1e-36e8d10c5b07",
+              "name": "Idade",
+              "value": "={{ $json.Idade }}",
+              "type": "number"
+            },
+            {
+              "id": "894df1e5-c997-4d10-8d87-e0901bb990ec",
+              "name": "Clt",
+              "value": "={{ $json.Clt }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c450ba77-57f1-41b4-b7d0-c26ad91b4151",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "70195d13-5189-4f7a-81ea-e834fadc3b75",
+              "leftValue": "={{ $json.Clt }}",
+              "rightValue": "sim",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "15d41997-bf19-42ed-8094-3c995c3f595f",
+              "leftValue": "={{ $json.Clt }}",
+              "rightValue": "não",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "770b80cd-1b0e-4c6d-a6ff-0c6ff717d44d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "formTitle": "Preencha seus dados ",
+        "formDescription": "Esse formulario é voltado para saber se você é clt ou não.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Email ",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "=Nome"
+            },
+            {
+              "fieldLabel": "=Idade",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "=Clt"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3f1aab78-74b5-4d81-a79a-8ce599efa3c1",
+      "name": "Formulario",
+      "webhookId": "5f3ec095-e0a0-4c4f-af76-33c396a87578"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json['Email '] }}",
+        "subject": "Oi, vi que você ainda não trablha, está a procura de emprego, posso te ajudar bastante.",
+        "emailType": "text",
+        "message": "=Olá  {{ $('Edit Fields').item.json['Email '] }}\nVi que você tem {{ $('Edit Fields').item.json.Idade }}, me avisa envie seu curriculo, e suas preferencias.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        96
+      ],
+      "id": "c9c75879-2809-4518-8f48-d8efa0115a8c",
+      "name": "Send a message",
+      "webhookId": "a7740471-1ba0-4dfd-a7fd-f4bb334d9384",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8YjBtSAEAAMUUbUp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json['Email '] }}",
+        "subject": "=Ola, vi que você ja tem um emprego, está a procura de um novo. {{ $('Edit Fields').item.json['Email '] }}",
+        "emailType": "text",
+        "message": "=Ola, {{ $('Edit Fields').item.json['Email '] }}\ntenho novas vagas de emprego semelhantes a sua areá, tem algum interesse, os benefícios e salaríos são altos.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        -160
+      ],
+      "id": "f73e4413-7660-4927-9d90-cdfd2de602e9",
+      "name": "Send a message1",
+      "webhookId": "419a57be-43f6-49d8-9225-3cfbed1678b3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8YjBtSAEAAMUUbUp",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formulario": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5cbab454-6cc5-4ed2-9334-acfa2cdd37c5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2e405dc16e208bb11bdd75614de942c1d0e1f7c6cf5bfe602a74797c9cfc3cb2"
+  },
+  "id": "TGsWErghVs99kVQG",
+  "tags": []
+}
